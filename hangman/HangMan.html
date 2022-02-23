@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+
+var wordsToGuess = ["hello", "clipboard", "computer", "scale", "dresser", "mirror"]
+var ogword = wordsToGuess[0]
+var display = " "
+var wrongGuesses = 0
+var letterBank = "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+
+function pickWord(){
+  num = Math.floor(Math.random() * wordsToGuess.length);
+  console.log(wordsToGuess[num]);
+  return wordsToGuess[num];
+}
+
+function startFn(){
+    ogword = pickWord();
+    var word = ogword;
+    display = " "
+    letterBank = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
+    var n = word.length;
+    for(var i = 0; i < n;i++){
+        display = display + "_ ";
+    }
+    document.getElementById("display").innerHTML = display;
+    wrongGuesses = 0;
+    whichMan(wrongGuesses);
+    }
+
+function guessFn(){
+    guess = document.getElementById("myGuess").value.toLowerCase().trim();
+
+    //correct guess
+    if (ogword.includes(guess) && display.includes("_") && checkInBank(guess)){
+        //find indexes
+        var indexes = []
+        var n = 1
+        for(var i = 0; i < ogword.length; i++){
+            if (ogword[i] == guess ){
+                indexes.push(n);
+                }
+            n += 2
+            }
+
+        //change display
+        for (var i = 0; i < indexes.length; i++){
+            display = display.slice(0,indexes[i]) + guess + display.slice(indexes[i]+1)
+        }
+        document.getElementById("display").innerHTML = display
+        document.getElementById("speak").innerHTML = "correct!"
+        if (!display.includes("_")){
+        document.getElementById("speak").innerHTML = "Good Job! You won!"
+        setTimeout(startFn(),1000);
+        }
+
+    }
+    else if (!checkInBank(guess)){
+        document.getElementById("speak").innerHTML = "You may have alreay guessed the letter or the guess is not a letter. "
+    }
+    else{
+        wrongGuesses += 1
+        whichMan(wrongGuesses)
+    }
+    //remove from bank if valid
+    if (checkInBank(guess)){
+        letterBank = letterBank.replace(guess, "")
+        document.getElementById("letterBankDiv").innerHTML = letterBank
+    }
+
+}
+
+function whichMan(wrongGuesses){
+    img = document.getElementById("man")
+    var man = ""
+    if (wrongGuesses == 0){
+        man =  "https://i.imgur.com/hRzVg1N.png"
+        img.src = man
+        }
+    else if(wrongGuesses == 1){
+        man = "https://i.imgur.com/cQmLMDO.png"
+        img.src = man
+    }
+    else if(wrongGuesses == 2){
+        man = "https://i.imgur.com/sAeTvqP.png"
+        img.src = man
+    }
+    else if(wrongGuesses == 3){
+        man = "https://i.imgur.com/yHGrZqc.png"
+        img.src = man
+    }
+    else if(wrongGuesses == 4){
+        man = "https://i.imgur.com/UKiV6J9.png"
+        img.src = man
+    }
+    else if(wrongGuesses == 5){
+        man = "https://i.imgur.com/w7QJQFH.png"
+        img.src = man
+    }
+    else if(wrongGuesses == 6){
+        man = "https://i.imgur.com/apN30T6.png"
+        img.src = man
+    }
+    else if(wrongGuesses == 7){
+        man = "https://i.imgur.com/KBMsCp9.png"
+        img.src = man
+        document.getElementById("speak").innerHTML = "Game Over!"
+    }
+
+
+}
+
+function checkInBank(guess){
+    var flag = false
+    if (guess.length == 1 && letterBank.includes(guess)){
+        flag = true
+    }
+    return flag
+}
+
+
+
+
+    </script>
+
+    </head>
+<body>
+
+    <style>
+
+    *{
+      background: black;
+      color: white;
+    }
+
+    h1 {
+        text-align: center
+    }
+    #display{
+        text-align: center;
+        font-size: 35px
+    }
+
+    #man{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        top: 150px;
+    }
+    .input {
+        position: relative;
+        top: 300px;
+        left: 360px
+
+    }
+    #speak{
+        position: relative;
+        top: 350px;
+        left: 360px;
+    }
+
+    #letterBankDiv{
+            height: 250px;
+            width: 300px;
+            background-color: white;
+            position: relative;
+            top: 500px;
+            left: 300px;
+            text-align: center;
+            border-style: solid;
+            color: black; 
+    }
+
+
+
+</style>
+
+
+<h1>Hangman</h1>
+<h2>Instructions: </h2>
+<p>Guess letters to figure out the words. But, don't get hanged!!</p>
+<p id = "display" style = "position: relative; top: 70px"> <script>startFn()</script></p>
+<img id = "man"  src = https://i.imgur.com/hRzVg1N.png>
+
+    <form name = "myForm" >
+    <label for = "myGuess" class = "input">  Guess a letter:  </label>
+    <input id = "myGuess" class = "input" type = "text" name = "guess" >
+    <input id = "submit" class = "input" type = "button" value = "submit" onclick = guessFn()>
+
+    </form>
+<p id = "speak"> messages from the server</p>
+
+<div class = "letterBank">
+<div id = "letterBankDiv" class = "letterBank">
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+</div>
+</div>
+
+</body>
+</html>
